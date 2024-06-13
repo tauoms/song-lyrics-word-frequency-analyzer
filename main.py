@@ -78,18 +78,24 @@ def plot_most_common_words(words_freq, min_word_count):
     
     # Plotting horizontal bar chart
     plt.figure(figsize=(10, 8))
-    plt.barh(words, frequencies, color='skyblue')
+    bars = plt.barh(words, frequencies, color='palegreen')
     plt.xlabel('Frequency')
     plt.ylabel('Words')
     plt.title(f'Most Common Words (Minimum Count >= {min_word_count})')
     plt.gca().invert_yaxis()  # Invert y-axis to have the most common word at the top
+    
+    # Annotate bars with exact counts
+    for bar, frequency in zip(bars, frequencies):
+        plt.text(bar.get_width(), bar.get_y() + bar.get_height()/2, f'{frequency}', 
+                 ha='left', va='center', fontsize=10, color='black')
+    
     plt.tight_layout()
     plt.show()
 
 def main():
     lyrics_file_path = 'input_here.txt'  # File path for the lyrics
     excluded_words_path = 'excluded_words.txt'  # File path for the excluded words
-    min_word_count = 2  # Minimum count of a word to be considered as most common
+    min_word_count = 3  # Minimum count of a word to be considered as most common
     
     # Read and sort the excluded words
     excluded_words = read_and_sort_excluded_words(excluded_words_path)
