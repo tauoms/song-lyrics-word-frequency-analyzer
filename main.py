@@ -1,5 +1,13 @@
 from collections import Counter
 import re
+import nltk
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+
+# Ensure you download necessary nltk data files
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 
 def read_and_sort_excluded_words(file_path):
     # Read the excluded words
@@ -15,19 +23,38 @@ def read_and_sort_excluded_words(file_path):
     
     return set(excluded_words)
 
+def preprocess_text(text):
+    # Normalize contractions and possessives
+    text = re.sub(r"n't", " not", text)
+    text = re.sub(r"'re", " are", text)
+    text = re.sub(r"'s", " is", text)
+    text = re.sub(r"'d", " would", text)
+    text = re.sub(r"'ll", " will", text)
+    text = re.sub(r"'t", " not", text)
+    text = re.sub(r"'ve", " have", text)
+    text = re.sub(r"'m", " am", text)
+    
+    return text
+
 def process_lyrics(file_path, excluded_words):
+    # Initialize the lemmatizer
+    lemmatizer = WordNetLemmatizer()
+    
     # Read the lyrics file
     with open(file_path, 'r') as file:
         lyrics = file.read()
     
-    # Clean and split the text into words
-    words = re.findall(r'\b\w+\b', lyrics.lower())
+    # Preprocess the text to normalize contractions
+    lyrics = preprocess_text(lyrics.lower())
     
-    # Filter out excluded words
-    words = [word for word in words if word not in excluded_words]
+    # Tokenize the text into words
+    words = word_tokenize(lyrics)
+    
+    # Lemmatize the words and filter out excluded words
+    lemmatized_words = [lemmatizer.lemmatize(word) for word in words if word not in excluded_words]
     
     # Count word frequencies
-    word_counts = Counter(words)
+    word_counts = Counter(lemmatized_words)
     
     # Find the most frequently occurring words
     most_common_words = word_counts.most_common()
