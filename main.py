@@ -70,7 +70,7 @@ def process_lyrics(file_path, excluded_words, min_word_count=5):
     
     return sorted_words, unique_words
 
-def plot_most_common_words(words_freq, min_word_count):
+def plot_most_common_words(words_freq, min_word_count, unique_words):
     # Filter words that meet the minimum count threshold
     words_freq = [(word, freq) for word, freq in words_freq if freq >= min_word_count]
     
@@ -80,7 +80,7 @@ def plot_most_common_words(words_freq, min_word_count):
     
     # Plotting horizontal bar chart
     plt.figure(figsize=(12, 10))  # Increase figure size
-    bars = plt.barh(np.arange(len(words)), frequencies, color='palegreen')
+    bars = plt.barh(np.arange(len(words)), frequencies, color='skyblue')
     plt.yticks(np.arange(len(words)), words)  # Set y-ticks to words
     plt.xlabel('Frequency')
     plt.ylabel('Words')
@@ -91,6 +91,11 @@ def plot_most_common_words(words_freq, min_word_count):
     for i, bar in enumerate(bars):
         plt.text(bar.get_width(), bar.get_y() + bar.get_height()/2, f'{frequencies[i]}', 
                  ha='left', va='center', fontsize=8, color='black')  # Reduce font size
+    
+    # Display unique words count
+    unique_count_text = f'Unique Words: {len(unique_words)}'  # Count unique words
+    plt.text(0.02, -0.1, unique_count_text, transform=plt.gca().transAxes,
+             fontsize=10, ha='left', va='top', bbox=dict(facecolor='lightgray', alpha=0.5))
     
     plt.tight_layout()
     
@@ -125,8 +130,8 @@ def main():
     save_unique_words(unique_words, unique_words_output_file)
     print(f"Unique words saved to {unique_words_output_file}")
     
-    # Plot most common words
-    plot_most_common_words(most_common_words, min_word_count)
+    # Plot most common words with unique words count
+    plot_most_common_words(most_common_words, min_word_count, unique_words)
 
 if __name__ == "__main__":
     main()
