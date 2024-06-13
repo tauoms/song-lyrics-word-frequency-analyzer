@@ -36,7 +36,7 @@ def preprocess_text(text):
     
     return text
 
-def process_lyrics(file_path, excluded_words):
+def process_lyrics(file_path, excluded_words, min_word_count=5):
     # Initialize the lemmatizer
     lemmatizer = WordNetLemmatizer()
     
@@ -56,29 +56,33 @@ def process_lyrics(file_path, excluded_words):
     # Count word frequencies
     word_counts = Counter(lemmatized_words)
     
-    # Find the most frequently occurring words
-    most_common_words = word_counts.most_common()
+    # Filter words by minimum count
+    filtered_words = {word: count for word, count in word_counts.items() if count >= min_word_count}
+    
+    # Sort by frequency in descending order
+    sorted_words = sorted(filtered_words.items(), key=lambda x: x[1], reverse=True)
     
     # Find unique words (those that appear only once)
-    unique_words = [word for word, count in word_counts.items() if count == 1]
+    unique_words = [word for word, count in word_counts.items() if count == 1 and word not in excluded_words]
     
-    return most_common_words, unique_words
+    return sorted_words, unique_words
 
 def main():
     lyrics_file_path = 'input_here.txt'  # File path for the lyrics
     excluded_words_path = 'excluded_words.txt'  # File path for the excluded words
+    min_word_count = 3  # Minimum count of a word to be considered as most common
     
     # Read and sort the excluded words
     excluded_words = read_and_sort_excluded_words(excluded_words_path)
     
     # Process the lyrics
-    most_common_words, unique_words = process_lyrics(lyrics_file_path, excluded_words)
+    most_common_words, unique_words = process_lyrics(lyrics_file_path, excluded_words, min_word_count)
     
-    print("Most Frequently Occurring Words:")
+    print(f"Most Frequently Occurring Words (minimum count >= {min_word_count}):")
     for word, count in most_common_words:
         print(f"{word}: {count}")
     
-    print("\nUnique Words (Appear Only Once):")
+    print("\nUnique Words (Appear Only Once After Filtering):")
     print(unique_words)
 
 if __name__ == "__main__":
