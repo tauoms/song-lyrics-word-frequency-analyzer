@@ -2,6 +2,7 @@ import re
 import nltk
 from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
+import numpy as np
 from collections import Counter
 
 # Ensure you download necessary nltk data files
@@ -69,7 +70,7 @@ def process_lyrics(file_path, excluded_words, min_word_count=5):
     
     return sorted_words, unique_words
 
-def plot_most_common_words(words_freq, min_word_count, unique_words):
+def plot_most_common_words(words_freq, min_word_count):
     # Filter words that meet the minimum count threshold
     words_freq = [(word, freq) for word, freq in words_freq if freq >= min_word_count]
     
@@ -79,36 +80,35 @@ def plot_most_common_words(words_freq, min_word_count, unique_words):
     
     # Plotting horizontal bar chart
     plt.figure(figsize=(12, 10))  # Increase figure size
-    bars = plt.barh(words, frequencies, color='skyblue')
+    bars = plt.barh(np.arange(len(words)), frequencies, color='palegreen')
+    plt.yticks(np.arange(len(words)), words)  # Set y-ticks to words
     plt.xlabel('Frequency')
     plt.ylabel('Words')
     plt.title(f'Most Common Words (Minimum Count >= {min_word_count})')
     plt.gca().invert_yaxis()  # Invert y-axis to have the most common word at the top
     
     # Annotate bars with exact counts
-    for bar, frequency in zip(bars, frequencies):
-        plt.text(bar.get_width(), bar.get_y() + bar.get_height()/2, f'{frequency}', 
+    for i, bar in enumerate(bars):
+        plt.text(bar.get_width(), bar.get_y() + bar.get_height()/2, f'{frequencies[i]}', 
                  ha='left', va='center', fontsize=8, color='black')  # Reduce font size
     
-    # Display unique words list below the plot, aligned to the left
-    unique_text = ', '.join(unique_words)  # Create comma-separated list
-    plt.text(0.02, -0.2, f'Unique Words: {unique_text}', transform=plt.gca().transAxes,
-             fontsize=10, ha='left', va='top', bbox=dict(facecolor='lightgray', alpha=0.5), wrap=True)
+    plt.tight_layout()
     
-    plt.tight_layout()  # Attempt tight layout
-
-    # Adjust layout if warning persists
-    plt.subplots_adjust(left=0.2, right=0.8, top=0.9, bottom=0.1)  # Adjust margins as needed
-    
-    # Save the plot with unique words annotation
+    # Save the plot as an image file
     plt.savefig('most_common_words_plot.png')
     
     plt.show()
+
+def save_unique_words(unique_words, output_file):
+    with open(output_file, 'w', encoding='utf-8') as file:
+        file.write('\n'.join(unique_words))
+
 
 def main():
     lyrics_file_path = 'input_here.txt'  # File path for the lyrics
     excluded_words_path = 'excluded_words.txt'  # File path for the excluded words
     min_word_count = 5  # Minimum count of a word to be considered as most common
+    unique_words_output_file = 'unique_words.txt'  # Output file for unique words
     
     # Read and sort the excluded words
     excluded_words = read_and_sort_excluded_words(excluded_words_path)
@@ -121,12 +121,12 @@ def main():
     for word, count in most_common_words:
         print(f"{word}: {count}")
     
-    # Plot most common words
-    plot_most_common_words(most_common_words, min_word_count, unique_words)
+    # Save unique words to a text file
+    save_unique_words(unique_words, unique_words_output_file)
+    print(f"Unique words saved to {unique_words_output_file}")
     
-    # Print unique words as comma-separated list
-    print("\nUnique Words (Appear Only Once After Filtering):")
-    print(', '.join(unique_words))
+    # Plot most common words
+    plot_most_common_words(most_common_words, min_word_count)
 
 if __name__ == "__main__":
     main()
