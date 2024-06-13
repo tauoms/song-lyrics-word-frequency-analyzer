@@ -36,7 +36,13 @@ def process_lyrics(file_path, excluded_words, min_word_count=5):
     
     # Read the lyrics file
     with open(file_path, 'r', encoding='utf-8') as file:
-        lyrics = file.read()
+        lines = file.readlines()
+
+    # Filter out lines starting with a number
+    filtered_lines = [line.strip() for line in lines if not re.match(r'^\d+\.', line.strip())]
+    
+    # Join filtered lines into a single text block
+    lyrics = ' '.join(filtered_lines)
     
     # Preprocess the text to normalize contractions and handle punctuation
     lyrics = preprocess_text(lyrics.lower())
@@ -93,7 +99,7 @@ def plot_most_common_words(words_freq, min_word_count, unique_words):
 def main():
     lyrics_file_path = 'input_here.txt'  # File path for the lyrics
     excluded_words_path = 'excluded_words.txt'  # File path for the excluded words
-    min_word_count = 2  # Minimum count of a word to be considered as most common
+    min_word_count = 5  # Minimum count of a word to be considered as most common
     
     # Read excluded words
     excluded_words = read_excluded_words(excluded_words_path)
