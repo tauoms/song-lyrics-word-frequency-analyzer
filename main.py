@@ -3,6 +3,7 @@ import re
 import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
+import matplotlib.pyplot as plt
 
 # Ensure you download necessary nltk data files
 nltk.download('punkt')
@@ -67,10 +68,28 @@ def process_lyrics(file_path, excluded_words, min_word_count=5):
     
     return sorted_words, unique_words
 
+def plot_most_common_words(words_freq, min_word_count):
+    # Filter words that meet the minimum count threshold
+    words_freq = [(word, freq) for word, freq in words_freq if freq >= min_word_count]
+    
+    # Extract words and frequencies
+    words = [word for word, freq in words_freq]
+    frequencies = [freq for word, freq in words_freq]
+    
+    # Plotting horizontal bar chart
+    plt.figure(figsize=(10, 8))
+    plt.barh(words, frequencies, color='skyblue')
+    plt.xlabel('Frequency')
+    plt.ylabel('Words')
+    plt.title(f'Most Common Words (Minimum Count >= {min_word_count})')
+    plt.gca().invert_yaxis()  # Invert y-axis to have the most common word at the top
+    plt.tight_layout()
+    plt.show()
+
 def main():
     lyrics_file_path = 'input_here.txt'  # File path for the lyrics
     excluded_words_path = 'excluded_words.txt'  # File path for the excluded words
-    min_word_count = 3  # Minimum count of a word to be considered as most common
+    min_word_count = 2  # Minimum count of a word to be considered as most common
     
     # Read and sort the excluded words
     excluded_words = read_and_sort_excluded_words(excluded_words_path)
@@ -78,10 +97,15 @@ def main():
     # Process the lyrics
     most_common_words, unique_words = process_lyrics(lyrics_file_path, excluded_words, min_word_count)
     
+    # Print most common words
     print(f"Most Frequently Occurring Words (minimum count >= {min_word_count}):")
     for word, count in most_common_words:
         print(f"{word}: {count}")
     
+    # Plot most common words
+    plot_most_common_words(most_common_words, min_word_count)
+    
+    # Print unique words
     print("\nUnique Words (Appear Only Once After Filtering):")
     print(unique_words)
 
