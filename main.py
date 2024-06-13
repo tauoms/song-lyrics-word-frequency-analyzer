@@ -1,6 +1,5 @@
 import re
 import nltk
-from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
 from collections import Counter
@@ -40,9 +39,6 @@ def preprocess_text(text):
     return text
 
 def process_lyrics(file_path, excluded_words, min_word_count=5):
-    # Initialize the lemmatizer
-    lemmatizer = WordNetLemmatizer()
-    
     # Read the lyrics file
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
@@ -53,26 +49,23 @@ def process_lyrics(file_path, excluded_words, min_word_count=5):
     # Join filtered lines into a single text block
     lyrics = ' '.join(filtered_lines)
     
-    # Preprocess the text to normalize contractions and handle punctuation
-    lyrics = preprocess_text(lyrics.lower())
-    
     # Tokenize the text into words
-    words = word_tokenize(lyrics)
+    words = word_tokenize(lyrics.lower())
     
-    # Lemmatize the words and filter out excluded words
-    lemmatized_words = [lemmatizer.lemmatize(word) for word in words if word.strip() and word.lower() not in excluded_words]
+    # Filter out excluded words and punctuation
+    filtered_words = [word for word in words if word.isalnum() and word.lower() not in excluded_words]
     
     # Count word frequencies
-    word_counts = Counter(lemmatized_words)
+    word_counts = Counter(filtered_words)
     
     # Filter words by minimum count
-    filtered_words = {word: count for word, count in word_counts.items() if count >= min_word_count and word != ','}
+    filtered_words = {word: count for word, count in word_counts.items() if count >= min_word_count}
     
     # Sort by frequency in descending order
     sorted_words = sorted(filtered_words.items(), key=lambda x: x[1], reverse=True)
     
     # Find unique words (those that appear only once)
-    unique_words = [word for word, count in word_counts.items() if count == 1 and word.lower() not in excluded_words and word != ',']
+    unique_words = [word for word, count in word_counts.items() if count == 1 and word.lower() not in excluded_words]
     
     return sorted_words, unique_words
 
