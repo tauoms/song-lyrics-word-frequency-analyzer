@@ -66,7 +66,7 @@ pip install -r requirements.txt
 
 #### Input your lyrics
 
-Input lyrics (song/album/discography) into "input_here.txt"
+Input lyrics (song/album/discography) into "input_here.txt". Lines starting with number (i.e "2. Second Son of R) are excluded by the program to make it easier to paste whole album lyrics from lyric websites.
 
 #### Run the Python Program
 
