@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from collections import Counter
 
-# Ensure you download necessary nltk data files
 nltk.download('punkt')
 nltk.download('wordnet')
 
@@ -80,7 +79,7 @@ def plot_most_common_words(words_freq, min_word_count, unique_words):
     
     # Plotting horizontal bar chart
     plt.figure(figsize=(12, 10))  # Increase figure size
-    bars = plt.barh(np.arange(len(words)), frequencies, color='skyblue')
+    bars = plt.barh(np.arange(len(words)), frequencies, color='palegreen')
     plt.yticks(np.arange(len(words)), words)  # Set y-ticks to words
     plt.xlabel('Frequency')
     plt.ylabel('Words')
@@ -110,10 +109,10 @@ def save_unique_words(unique_words, output_file):
 
 
 def main():
-    lyrics_file_path = 'input_here.txt'  # File path for the lyrics
-    excluded_words_path = 'excluded_words.txt'  # File path for the excluded words
-    min_word_count = 5  # Minimum count of a word to be considered as most common
-    unique_words_output_file = 'unique_words.txt'  # Output file for unique words
+    lyrics_file_path = 'input_here.txt'
+    excluded_words_path = 'excluded_words.txt'
+    min_word_count = 5
+    unique_words_output_file = 'unique_words.txt'
     
     # Read and sort the excluded words
     excluded_words = read_and_sort_excluded_words(excluded_words_path)
