@@ -3,7 +3,7 @@
 A program that takes input song lyrics and outputs a graph of the most frequently used words and a text file of all unique (appears only once) words used. Input lyrics can be a song, an album or the whole discography of an artist.
 
 The file "excluded_words.txt" has some common stop words that are filtered out from results. These can be modified by the user.
-"min_word_count = 5" on line 114 can be adjusted to set the threshold for minimum count of words to be displayed.
+"min_word_count = 5" on line 114 can be adjusted to set the threshold for minimum count a word needs in order to be displayed.
 
 ## Technologies used
 
