@@ -14,6 +14,10 @@ Built with:
   - matplotlib.pyplot
   - numpy
 
+## Screenshot
+
+![Screenshot 2024-06-16 at 17 01 23](https://github.com/tauoms/song-lyrics-word-frequency-analyzer/assets/147260100/76cfd91f-3e6c-4e71-a8ba-5fa8fd5528f3)
+
 ## Setup and usage
 
 #### Prerequisites
@@ -74,7 +78,3 @@ Paste lyrics (song/album/discography) into "input_here.txt". Lines starting with
 ```
 python main.py
 ```
-
-## Screenshot
-
-![Screenshot 2024-06-16 at 17 01 23](https://github.com/tauoms/song-lyrics-word-frequency-analyzer/assets/147260100/76cfd91f-3e6c-4e71-a8ba-5fa8fd5528f3)
